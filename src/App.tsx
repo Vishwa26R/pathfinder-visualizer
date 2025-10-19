@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useState, useEffect } from 'react';
-import { Node } from './types';
+import type { Node } from './types';
 
 // Define the dimensions of the grid
 const GRID_ROWS = 20;
@@ -50,7 +50,37 @@ function App() {
   };
 
   // We'll add the rendering logic here
-  return <div>Grid will be rendered here</div>;
+  return (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="grid grid-cols-[repeat(50,25px)]">
+      {grid.map((row, rowIndex) => (
+        // We need a key for the outer div as well
+        <div key={rowIndex} className="flex">
+          {row.map((node, nodeIndex) => {
+            const { isStart, isFinish, isWall } = node;
+
+            // Determine extra CSS classes based on the node's properties
+            const extraClassName = isFinish
+              ? 'bg-red-500'   // Finish node is red
+              : isStart
+              ? 'bg-green-500' // Start node is green
+              : isWall
+              ? 'bg-gray-800'  // Wall node is dark gray
+              : 'bg-white';    // Default is white
+
+            return (
+              <div
+                key={nodeIndex}
+                // Use template literals to combine class names
+                className={`w-[25px] h-[25px] border border-gray-300 ${extraClassName}`}
+              ></div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  </div>
+);
 }
 
 export default App;
