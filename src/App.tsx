@@ -12,6 +12,34 @@ const START_NODE_COL = 5;
 const FINISH_NODE_ROW = 10;
 const FINISH_NODE_COL = 45;
 
+// Creates a single node object with default values
+const createNode = (row: number, col: number): Node => {
+  return {
+    row,
+    col,
+    isStart: row === START_NODE_ROW && col === START_NODE_COL,
+    isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
+    isWall: false,
+    isVisited: false,
+    isPath: false,
+    distance: Infinity,
+    previousNode: null,
+  };
+};
+
+// Creates the main 2D array of nodes
+const createInitialGrid = (): Node[][] => {
+  const grid: Node[][] = [];
+  for (let row = 0; row < GRID_ROWS; row++) {
+    const currentRow: Node[] = [];
+    for (let col = 0; col < GRID_COLS; col++) {
+      currentRow.push(createNode(row, col));
+    }
+    grid.push(currentRow);
+  }
+  return grid;
+};
+
 function App() {
   const [grid, setGrid] = useState<Node[][]>([]);
 
@@ -20,34 +48,6 @@ function App() {
     const initialGrid = createInitialGrid();
     setGrid(initialGrid);
   }, []);
-
-  // Creates the main 2D array of nodes
-  const createInitialGrid = (): Node[][] => {
-    const grid: Node[][] = [];
-    for (let row = 0; row < GRID_ROWS; row++) {
-      const currentRow: Node[] = [];
-      for (let col = 0; col < GRID_COLS; col++) {
-        currentRow.push(createNode(row, col));
-      }
-      grid.push(currentRow);
-    }
-    return grid;
-  };
-
-  // Creates a single node object with default values
-  const createNode = (row: number, col: number): Node => {
-    return {
-      row,
-      col,
-      isStart: row === START_NODE_ROW && col === START_NODE_COL,
-      isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
-      isWall: false,
-      isVisited: false,
-      isPath: false,
-      distance: Infinity,
-      previousNode: null,
-    };
-  };
 
   // We'll add the rendering logic here
   return (

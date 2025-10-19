@@ -5,8 +5,8 @@ export interface Node {
   isStart: boolean;
   isFinish: boolean;
   isWall: boolean;
-  isVisited: boolean; // For visualizing the algorithm
-  isPath: boolean;    // For visualizing the shortest path
-  distance: number;   // Distance from the start node
-  previousNode: Node | null; // To reconstruct the path
+  isVisited: boolean;
+  isPath: boolean;
+  distance: number;
+  previousNode: Node | null;
 }
