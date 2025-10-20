@@ -1,6 +1,7 @@
 // src/components/App.tsx
 import { useState, useEffect } from 'react';
 import type { Node } from '../types'; // This path assumes types.ts is in the src/ folder
+import { dijkstra } from '../algorithms/dijkstra';
 
 // --- Constants (defined outside the component) ---
 const GRID_ROWS = 20;
@@ -67,6 +68,71 @@ function App() {
   const handleMouseUp = () => {
     setIsMousePressed(false);
   };
+  const visualizeDijkstra = () => {
+    const startNode = grid[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    
+    // This runs the algorithm and gets the ordered list of visited nodes
+    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+    // This gets the shortest path by backtracking from the finish node
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+
+    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+  };
+
+  const animateDijkstra = (
+  visitedNodesInOrder: Node[],
+  nodesInShortestPathOrder: Node[]
+) => {
+  for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+    // When we've animated all the visited nodes, animate the shortest path
+    if (i === visitedNodesInOrder.length) {
+      setTimeout(() => {
+        animateShortestPath(nodesInShortestPathOrder);
+      }, 10 * i);
+      return;
+    }
+    // Animate the visited nodes
+    setTimeout(() => {
+      const node = visitedNodesInOrder[i];
+      // Directly manipulate the DOM for performance
+      const nodeElement = document.getElementById(`node-${node.row}-${node.col}`);
+      if (nodeElement) {
+        // Add a 'node-visited' class unless it's a start/finish node
+        if (!node.isStart && !node.isFinish) {
+          nodeElement.className += ' node-visited';
+        }
+      }
+    }, 10 * i);
+  }
+};
+
+const animateShortestPath = (nodesInShortestPathOrder: Node[]) => {
+  for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+    setTimeout(() => {
+      const node = nodesInShortestPathOrder[i];
+      const nodeElement = document.getElementById(`node-${node.row}-${node.col}`);
+      if (nodeElement) {
+        // Add a 'node-shortest-path' class unless it's a start/finish node
+        if (!node.isStart && !node.isFinish) {
+          nodeElement.className += ' node-shortest-path';
+        }
+      }
+    }, 50 * i);
+  }
+};
+
+// Backtracks from the finishNode to find the shortest path.
+// Only works when called AFTER the dijkstra method has run.
+const getNodesInShortestPathOrder = (finishNode: Node): Node[] => {
+  const nodesInShortestPathOrder: Node[] = [];
+  let currentNode: Node | null = finishNode;
+  while (currentNode !== null) {
+    nodesInShortestPathOrder.unshift(currentNode);
+    currentNode = currentNode.previousNode;
+  }
+  return nodesInShortestPathOrder;
+};
 
   // Helper function to update the grid immutably
   const getNewGridWithWallToggled = (
@@ -94,6 +160,14 @@ function App() {
       className="flex flex-col items-center justify-center min-h-screen bg-gray-100"
       onMouseUp={handleMouseUp} // Stop drawing when mouse is released anywhere
     >
+      <div className="mb-4">
+      <button
+        className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+        onClick={() => visualizeDijkstra()}
+      >
+        Visualize Dijkstra's Algorithm
+      </button>
+    </div>
       <div className="grid grid-cols-[repeat(50,25px)]" onMouseLeave={handleMouseUp}>
         {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="flex">
