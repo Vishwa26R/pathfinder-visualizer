@@ -2,6 +2,11 @@
 import { useState, useEffect } from 'react';
 import type { Node } from './types';
 
+function App() {
+  const [grid, setGrid] = useState<Node[][]>([]);
+  // Add this new state right below the grid state
+  const [isMousePressed, setIsMousePressed] = useState(false);
+
 // Define the dimensions of the grid
 const GRID_ROWS = 20;
 const GRID_COLS = 50;
