@@ -80,14 +80,26 @@ function App() {
     animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
   };
   const handleClearBoard = () => {
-  // Clear all animations
-  const nodes = document.querySelectorAll('.node');
-  nodes.forEach(node => {
-    if (!node.classList.contains('node-start') && !node.classList.contains('node-finish')) {
-      node.className = 'w-[25px] h-[25px] border border-gray-300 bg-white';
+  // 1. Manually clean up all DOM nodes
+  const allNodes = document.querySelectorAll('.node');
+  allNodes.forEach(nodeElement => {
+    // Check if it's the start or finish node by its current style
+    if (nodeElement.classList.contains('bg-green-500')) {
+      // Reset start node
+      nodeElement.className =
+        'node w-[25px] h-[25px] border border-gray-300 bg-green-500';
+    } else if (nodeElement.classList.contains('bg-red-500')) {
+      // Reset finish node
+      nodeElement.className =
+        'node w-[25px] h-[25px] border border-gray-300 bg-red-500';
+    } else {
+      // Reset all other nodes (walls, visited, path) to white
+      nodeElement.className =
+        'node w-[25px] h-[25px] border border-gray-300 bg-white';
     }
   });
-  // Create a fresh, new grid
+
+  // 2. Now, reset the underlying React state
   const newGrid = createInitialGrid();
   setGrid(newGrid);
 };
