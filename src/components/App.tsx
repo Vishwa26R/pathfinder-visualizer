@@ -79,6 +79,18 @@ function App() {
 
     animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
   };
+  const handleClearBoard = () => {
+  // Clear all animations
+  const nodes = document.querySelectorAll('.node');
+  nodes.forEach(node => {
+    if (!node.classList.contains('node-start') && !node.classList.contains('node-finish')) {
+      node.className = 'w-[25px] h-[25px] border border-gray-300 bg-white';
+    }
+  });
+  // Create a fresh, new grid
+  const newGrid = createInitialGrid();
+  setGrid(newGrid);
+};
 
   const animateDijkstra = (
   visitedNodesInOrder: Node[],
@@ -167,6 +179,12 @@ const getNodesInShortestPathOrder = (finishNode: Node): Node[] => {
       >
         Visualize Dijkstra's Algorithm
       </button>
+      <button
+    className="px-4 py-2 ml-4 font-bold text-white bg-red-500 rounded hover:bg-red-700"
+    onClick={handleClearBoard}
+  >
+    Clear Board
+  </button>
     </div>
       <div className="grid grid-cols-[repeat(50,25px)]" onMouseLeave={handleMouseUp}>
         {grid.map((row, rowIndex) => (
