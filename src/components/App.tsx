@@ -204,7 +204,7 @@ const getNodesInShortestPathOrder = (finishNode: Node): Node[] => {
                 <div
                   key={nodeIndex}
                   id={`node-${row}-${col}`}
-                  className={`w-[25px] h-[25px] border border-gray-300 ${extraClassName}`}
+                  className={`node w-[25px] h-[25px] border border-gray-300 ${extraClassName}`}
                   onMouseDown={() => handleMouseDown(row, col)}
                   onMouseEnter={() => handleMouseEnter(row, col)}
                 ></div>
